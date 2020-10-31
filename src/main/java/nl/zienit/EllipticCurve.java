@@ -144,10 +144,10 @@ public class EllipticCurve implements AdditiveGroup<Point> {
     }
 
     public static void main(String[] args) {
-        CyclicAdditiveGroup<Point> EC = brainpoolP320r1(); //new EllipticCurve(BigInteger.valueOf(2), BigInteger.valueOf(3), BigInteger.valueOf(97));
+        CyclicAdditiveGroup<Point> EC = brainpoolP320r1();
         for (int i = 0; i < 8; i++) {
             System.out.println(EC.times(EC.generator(), BigInteger.valueOf(i)));
         }
-        System.out.println(EC.times(EC.generator(),EC.order())); // must be POINT_AT_INFINITY
+        System.out.println(EC.times(EC.generator(), EC.order())); // must be POINT_AT_INFINITY
     }
 }

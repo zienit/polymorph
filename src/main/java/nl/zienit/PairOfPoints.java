@@ -14,11 +14,11 @@ public class PairOfPoints {
         this(a, a);
     }
 
-    public Point getA() {
-        return a;
+    public Point getOdd() {
+        return a.getY().testBit(0) ? a : b;
     }
 
-    public Point getB() {
-        return b;
+    public Point getEven() {
+        return a.getY().testBit(0) ? b : a;
     }
 }

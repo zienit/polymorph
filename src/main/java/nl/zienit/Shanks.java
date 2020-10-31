@@ -23,16 +23,12 @@ public class Shanks {
         this.e = e;
         this.q = q;
 
-        System.out.println("e=" + e);
-        System.out.println("q=" + q);
-
         BigInteger z;
         do {
             final BigInteger x = random();
             z = x.modPow(q, m);
         } while (z.modPow(BigInteger.valueOf(2).modPow(e.subtract(BigInteger.ONE), m), m).equals(BigInteger.ONE));
         this.z = z;
-        System.out.println("z=" + z);
     }
 
     // todo: make reusable
@@ -52,7 +48,6 @@ public class Shanks {
         BigInteger v = a.multiply(x).mod(m);
         BigInteger w = v.multiply(x).mod(m);
 
-        System.out.println("y = " + y + ",r = " + r + " , x = " + x + ", v = " + v + ", w = " + w);
         while (!w.equals(BigInteger.ONE)) {
             BigInteger k = BigInteger.ONE;
             while (!w.modPow(BigInteger.valueOf(2).modPow(k, m), m).equals(BigInteger.ONE)) {
