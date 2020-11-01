@@ -115,7 +115,6 @@ public class EllipticCurve implements AdditiveGroup<Point> {
 
     public CyclicAdditiveGroup<Point> subgroup(Point G, BigInteger q) {
         return new CyclicAdditiveGroup<Point>() {
-
             @Override
             public Point generator() {
                 return G;
@@ -139,6 +138,11 @@ public class EllipticCurve implements AdditiveGroup<Point> {
             @Override
             public BigInteger order() {
                 return q;
+            }
+
+            @Override
+            public AdditiveGroup<Point> group() {
+                return EllipticCurve.this;
             }
         };
     }

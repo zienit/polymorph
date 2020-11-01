@@ -1,6 +1,7 @@
 package nl.zienit;
 
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Random;
 
 public class ElGamal<T> {
@@ -24,6 +25,21 @@ public class ElGamal<T> {
         }
 
         @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Cryptogram<?> that = (Cryptogram<?>) o;
+            return Objects.equals(A, that.A) &&
+                    Objects.equals(B, that.B) &&
+                    Objects.equals(C, that.C);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(A, B, C);
+        }
+
+        @Override
         public String toString() {
             return "<" + A + "," + B + "," + C + ">";
         }
@@ -37,6 +53,10 @@ public class ElGamal<T> {
             r = new BigInteger(limit.bitLength(), rnd);
         } while (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(limit) >= 0);
         return r;
+    }
+
+    public T publicKey(BigInteger privateKey) {
+        return G.times(G.generator(), privateKey);
     }
 
     public Cryptogram<T> encrypt(T M, T Y) {
