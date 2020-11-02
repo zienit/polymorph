@@ -90,19 +90,19 @@ public class ElGamalTest {
 
         // User authenticates at IdP to access SP1 (identity) and SP2 (pseudonym).
         // The chip releases the randomized PIP after successful authentication
-        final ElGamal.Cryptogram<Point> randomizedPI = EG.reRandomize(pi);
-        final ElGamal.Cryptogram<Point> randomizedPP = EG.reRandomize(pp);
+        final ElGamal.Cryptogram<Point> rerandomizedPI = EG.reRandomize(pi);
+        final ElGamal.Cryptogram<Point> rerandomizedPP = EG.reRandomize(pp);
 
         // IdP transforms PI to EI@SP1
-        final ElGamal.Cryptogram<Point> eiAtSP1 = EG.reKeying(pi, encryptionKeySP1);
+        final ElGamal.Cryptogram<Point> eiAtSP1 = EG.reKeying(rerandomizedPI, encryptionKeySP1);
         // IdP transforms PP to EP@SP2
-        final ElGamal.Cryptogram<Point> epAtSP2 = EG.reShuffling(EG.reKeying(pp, encryptionKeySP2), pseudonymShuffleKeySP2);
+        final ElGamal.Cryptogram<Point> epAtSP2 = EG.reShuffling(EG.reKeying(rerandomizedPP, encryptionKeySP2), pseudonymShuffleKeySP2);
 
         // SP1 decrypts identity
         assertThat(EG.decrypt(eiAtSP1, decryptionKeySP1).decode(), is(bsn.getBytes()));
 
         // SP2 reshuffles with closing key and then decrypts pseudonym
         final byte[] pAtSP2 = EG.decrypt(EG.reShuffling(epAtSP2, pseudonymClosingKeySP2), decryptionKeySP2).decode();
-        System.out.println(new BigInteger(pAtSP2).toString(16));
+        assertThat(pAtSP2, is(EC.times(encodedPseudonym, pseudonymShuffleKeySP2.multiply(pseudonymClosingKeySP2)).decode()));
     }
 }
