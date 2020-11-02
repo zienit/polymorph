@@ -70,9 +70,7 @@ public class ElGamalTest {
         final BigInteger s = EG.random();
         final ElGamal.Cryptogram<Point> ep = EG.reShuffling(pp, s);
         assertThat(EG.decrypt(ep, privateKey).decode(), not(is(pseudonym)));
-
-        final ElGamal.Cryptogram<Point> unshuffled = EG.reShuffling(ep, s.modInverse(EC.order()));
-        assertThat(EG.decrypt(unshuffled, privateKey).decode(), is(pseudonym));
+        assertThat(EG.decrypt(ep, privateKey).decode(), is(EC.times(encodedPseudonym, s).decode()));
     }
 
     @Test
