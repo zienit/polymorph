@@ -7,7 +7,7 @@ import java.math.BigInteger;
 
 import static nl.zienit.EllipticCurve.brainpoolP320r1;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class EllipticCurveTest {
 

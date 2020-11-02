@@ -1,9 +1,6 @@
 package nl.zienit;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Random;
 
 public class EllipticCurve implements AdditiveGroup<Point> {
 
