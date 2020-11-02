@@ -2,6 +2,7 @@ package nl.zienit;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class Point {
@@ -24,7 +25,7 @@ public class Point {
 
     @Override
     public boolean equals(Object other) {
-        return (other instanceof Point) && ((Point) other).x.equals(x) && ((Point) other).y.equals(y);
+        return (other instanceof Point) && Objects.equals(((Point) other).x, x) && Objects.equals(((Point) other).y, y);
     }
 
     @Override

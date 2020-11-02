@@ -12,11 +12,16 @@ import static org.junit.Assert.assertThat;
 public class EllipticCurveTest {
 
     private EllipticCurve simpleEC;
+    private CyclicAdditiveGroup<Point> cyclicEC;
 
     @Before
     public void before() {
-        // y^2 = x^3 - 7x + 10 over integers mod 19
+        // y^2 = x^3 - 7x + 10 (mod 19)
         simpleEC = new EllipticCurve(BigInteger.valueOf(-7), BigInteger.valueOf(10), BigInteger.valueOf(19));
+
+        // y^2 = x^3 + 2x + 3 (mod 97), generator = (3,6), order = 5
+        cyclicEC = new EllipticCurve(BigInteger.valueOf(2), BigInteger.valueOf(3), BigInteger.valueOf(97))
+                .subgroup(new Point(BigInteger.valueOf(3), BigInteger.valueOf(6)), BigInteger.valueOf(5));
     }
 
     @Test
@@ -29,6 +34,17 @@ public class EllipticCurveTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSimpleECAt4() {
         simpleEC.at(BigInteger.valueOf(4));
+    }
+
+    @Test
+    public void testCyclicEC() {
+        final Point G = cyclicEC.generator();
+        assertThat(cyclicEC.times(G, BigInteger.ZERO), is(EllipticCurve.POINT_AT_INFINITY));
+        assertThat(cyclicEC.times(G, BigInteger.ONE), is(G));
+        assertThat(cyclicEC.times(G, BigInteger.valueOf(2)), is(new Point(BigInteger.valueOf(80), BigInteger.valueOf(10))));
+        assertThat(cyclicEC.times(G, BigInteger.valueOf(3)), is(new Point(BigInteger.valueOf(80), BigInteger.valueOf(87))));
+        assertThat(cyclicEC.times(G, BigInteger.valueOf(4)), is(new Point(BigInteger.valueOf(3), BigInteger.valueOf(91))));
+        assertThat(cyclicEC.times(G, BigInteger.valueOf(5)), is(EllipticCurve.POINT_AT_INFINITY));
     }
 
     @Test
