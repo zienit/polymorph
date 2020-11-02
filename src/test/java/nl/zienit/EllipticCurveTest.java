@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.math.BigInteger;
 
+import static nl.zienit.EllipticCurve.brainpoolP320r1;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -30,4 +31,13 @@ public class EllipticCurveTest {
         simpleEC.at(BigInteger.valueOf(4));
     }
 
+    @Test
+    public void testPrintABunchOfBrainpoolP320r1Points() {
+        final CyclicAdditiveGroup<Point> EC = brainpoolP320r1();
+        System.out.println("first 10 of " + EC.order() + " possible points of the Brainpool P320r1 Elliptic Curve:");
+
+        for (int i = 1; i <= 10; i++) {
+            System.out.println(EC.times(EC.generator(), BigInteger.valueOf(i)));
+        }
+    }
 }

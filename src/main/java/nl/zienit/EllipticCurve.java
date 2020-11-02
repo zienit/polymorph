@@ -1,6 +1,9 @@
 package nl.zienit;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Random;
 
 public class EllipticCurve implements AdditiveGroup<Point> {
 
@@ -113,6 +116,20 @@ public class EllipticCurve implements AdditiveGroup<Point> {
         return i.modPow(p.subtract(BigInteger.ONE).divide(TWO), p).intValue() == 1;
     }
 
+    public Point encode(byte[] value) {
+        for (; ; ) {
+            final BigInteger x = Point.encodeX(value);
+            if (x.compareTo(p) > 0) {
+                break;
+            }
+            try {
+                return at(x).getEven();
+            } catch (IllegalArgumentException e) { // No Solution
+            }
+        }
+        throw new IllegalArgumentException("value too large");
+    }
+
     public CyclicAdditiveGroup<Point> subgroup(Point G, BigInteger q) {
         return new CyclicAdditiveGroup<Point>() {
             @Override
@@ -127,7 +144,7 @@ public class EllipticCurve implements AdditiveGroup<Point> {
 
             @Override
             public Point times(Point point, BigInteger i) {
-                return EllipticCurve.this.times(point, i);
+                return EllipticCurve.this.times(point, i.mod(q));
             }
 
             @Override
@@ -145,13 +162,5 @@ public class EllipticCurve implements AdditiveGroup<Point> {
                 return EllipticCurve.this;
             }
         };
-    }
-
-    public static void main(String[] args) {
-        CyclicAdditiveGroup<Point> EC = brainpoolP320r1();
-        for (int i = 0; i < 8; i++) {
-            System.out.println(EC.times(EC.generator(), BigInteger.valueOf(i)));
-        }
-        System.out.println(EC.times(EC.generator(), EC.order())); // must be POINT_AT_INFINITY
     }
 }

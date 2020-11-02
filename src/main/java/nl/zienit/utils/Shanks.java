@@ -1,4 +1,4 @@
-package nl.zienit;
+package nl.zienit.utils;
 
 import java.math.BigInteger;
 import java.util.Random;

@@ -33,22 +33,17 @@ public class Point {
     }
 
     public static BigInteger encodeX(byte[] value) {
-        if (value.length > 15) {
-            throw new IllegalArgumentException("value too long");
-        }
-        final byte[] encoded = new byte[20];
-        encoded[0] = (byte) value.length;
+        final byte[] encoded = new byte[1 + value.length + 2];
+        encoded[0] = (byte) 0x01; // assure number is always positive (two's complement sign bit = 0) and leading 0's are not lost
         System.arraycopy(value, 0, encoded, 1, value.length);
-        Arrays.fill(encoded, value.length + 1, 16, (byte) 0x00);
-        final byte[] hash = new byte[4];
-        new Random().nextBytes(hash);
-        System.arraycopy(hash, 0, encoded, 16, hash.length);
+        final byte[] rnd = new byte[2];
+        new Random().nextBytes(rnd);
+        System.arraycopy(rnd, 0, encoded, 1 + value.length, rnd.length);
         return new BigInteger(encoded);
     }
 
     public byte[] decode() {
         final byte[] decoded = x.toByteArray();
-        final int length = decoded[0];
-        return Arrays.copyOfRange(decoded, 1, 1 + length);
+        return Arrays.copyOfRange(decoded, 1, decoded.length - 2);
     }
 }
